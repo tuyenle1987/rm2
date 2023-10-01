@@ -1,5 +1,5 @@
 let limit = 400;
-let offset = 400;
+let offset = 1200;
 
 async function post_company_data(companies) {
   await fetch(
