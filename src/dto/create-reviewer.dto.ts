@@ -7,6 +7,14 @@ export class CreateReviewerDto {
   @IsNotEmpty()
   name: string;
 
+  @IsString()
+  @IsOptional()
+  description: string;
+
+  @IsString()
+  @IsOptional()
+  image: string;
+
   @IsOptional()
   @IsString()
   email: string;
@@ -24,8 +32,8 @@ export class CreateReviewerDto {
   linkedin: string;
 
   @IsEnum(StatusEnum)
-  @IsNotEmpty()
-  status: StatusEnum;
+  @IsOptional()
+  status?: StatusEnum = StatusEnum.pending;
 
   @IsOptional()
   @Transform( ({ value }) => new Date(value))

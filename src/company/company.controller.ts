@@ -7,6 +7,27 @@ import { CompanyService } from './company.service';
 export class CompanyController {
   constructor(private readonly service: CompanyService) {}
 
+  @Post('/bulk')
+  @Version('1')
+  async upsertBulk(
+    @Res() response,
+    @Body() createDtos: CreateCompanyDto[],
+  ) {
+    try {
+      const data = await this.service.upsertBulk(createDtos);
+
+      return response.status(HttpStatus.CREATED).json({
+        data,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+        message: 'Error: Company not created!',
+        error: 'Bad Request'
+      });
+    }
+  }
+
   @Post()
   @Version('1')
   async create(
@@ -20,6 +41,7 @@ export class CompanyController {
         data,
       });
     } catch (err) {
+      console.error(err);
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Company not created!',

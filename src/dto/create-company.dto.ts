@@ -1,11 +1,16 @@
 import { IsOptional, IsEnum, IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
-import { Transform , Type} from 'class-transformer';
+import { Transform , Type } from 'class-transformer';
+import { Types } from 'mongoose';
 import { StatusEnum } from '../enums/status.enum';
 
 export class CreateCompanyDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @IsString()
+  @IsOptional()
+  description: string;
 
   @IsOptional()
   @IsString()
@@ -21,15 +26,27 @@ export class CreateCompanyDto {
 
   @IsOptional()
   @IsString()
+  linkedin: string;
+
+  @IsOptional()
+  @IsString()
+  facebook: string;
+
+  @IsOptional()
+  @IsString()
+  twitter: string;
+
+  @IsOptional()
+  @IsString()
   headquarter: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsString()
   size: string;
 
   @IsEnum(StatusEnum)
-  @IsNotEmpty()
-  status: StatusEnum;
+  @IsOptional()
+  status?: StatusEnum = StatusEnum.pending;
 
   @IsOptional()
   @Transform( ({ value }) => new Date(value))

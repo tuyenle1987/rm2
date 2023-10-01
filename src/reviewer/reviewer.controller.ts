@@ -5,7 +5,28 @@ import { ReviewerService } from './reviewer.service';
 
 @Controller('reviewer')
 export class ReviewerController {
-  constructor(private readonly reviewerService: ReviewerService) {}
+  constructor(private readonly service: ReviewerService) {}
+
+  @Post('/bulk')
+  @Version('1')
+  async upsertBulk(
+    @Res() response,
+    @Body() createDtos: CreateReviewerDto[],
+  ) {
+    try {
+      const data = await this.service.upsertBulk(createDtos);
+
+      return response.status(HttpStatus.CREATED).json({
+        data,
+      });
+    } catch (err) {
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        statusCode: 400,
+        message: 'Error: Reviewer not created!',
+        error: 'Bad Request'
+      });
+    }
+  }
 
   @Post()
   @Version('1')
@@ -14,7 +35,7 @@ export class ReviewerController {
     @Body() createDto: CreateReviewerDto,
   ) {
     try {
-      const data = await this.reviewerService.create(createDto);
+      const data = await this.service.create(createDto);
       return response.status(HttpStatus.CREATED).json({ data });
     } catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
@@ -33,7 +54,7 @@ export class ReviewerController {
     @Body() updateDto: UpdateReviewerDto,
   ) {
     try {
-      const data = await this.reviewerService.update(id, updateDto);
+      const data = await this.service.update(id, updateDto);
 
       return response.status(HttpStatus.OK).json({
         data,
@@ -47,7 +68,7 @@ export class ReviewerController {
   @Version('1')
   async getAll(@Res() response) {
     try {
-      const data = await this.reviewerService.getAll();
+      const data = await this.service.getAll();
 
       return response.status(HttpStatus.OK).json({
         data,
@@ -64,7 +85,7 @@ export class ReviewerController {
     @Param('id') id: string,
   ) {
     try {
-      const data = await this.reviewerService.get(id);
+      const data = await this.service.get(id);
 
       return response.status(HttpStatus.OK).json({
         data,
@@ -81,7 +102,7 @@ export class ReviewerController {
     @Param('id') id: string,
   ) {
     try {
-      const data = await this.reviewerService.delete(id);
+      const data = await this.service.delete(id);
 
       return response.status(HttpStatus.OK).json({
         data,

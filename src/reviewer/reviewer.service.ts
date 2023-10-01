@@ -10,6 +10,27 @@ import { UpdateReviewerDto } from '../dto/update-reviewer.dto';
 export class ReviewerService {
   constructor(@InjectModel('Reviewer') private reviewerModel:Model<IReviewer>) {}
 
+  async upsertBulk(
+    createReviewerDtos: CreateReviewerDto[],
+  ): Promise<any> {
+
+    let newData = createReviewerDtos.map((createReviewerDto: CreateReviewerDto) => {
+      return {
+        updateOne: {
+          filter: {
+            name: createReviewerDto.name,
+            company: createReviewerDto.company,
+          },
+          update: createReviewerDto,
+          upsert: true,
+        },
+      }
+    });
+
+    const data = await this.reviewerModel.bulkWrite(newData);
+    return data;
+  }
+
   async create(
     createReviewerDto: CreateReviewerDto,
   ): Promise<IReviewer> {

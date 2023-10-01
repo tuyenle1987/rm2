@@ -25,8 +25,8 @@ export class CreateReviewDto {
   rating: number;
 
   @IsEnum(StatusEnum)
-  @IsNotEmpty()
-  status: StatusEnum;
+  @IsOptional()
+  status?: StatusEnum = StatusEnum.pending;
 
   @IsOptional()
   @Transform( ({ value }) => new Date(value))

@@ -6,7 +6,6 @@ export type ReviewerDocument = HydratedDocument<Reviewer>;
 
 @Schema()
 export class Reviewer {
-
   @Prop({ type: Types.ObjectId , ref: 'Company' })
   company:  Types.ObjectId;
 
@@ -22,7 +21,7 @@ export class Reviewer {
   @Prop({ type: String, required: false })
   description: string;
 
-  @Prop({ type: String, enum: StatusEnum, required: false })
+  @Prop({ type: String, enum: StatusEnum, default: StatusEnum.pending, required: false })
   status: StatusEnum;
 
   @Prop({ type: Date, required: false, default: Date.now })

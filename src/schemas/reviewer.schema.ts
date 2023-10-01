@@ -9,6 +9,12 @@ export class Reviewer {
  @Prop({ type: String, required: true })
   name: string;
 
+  @Prop({ type: String, required: false })
+  description: string;
+
+  @Prop({ type: String, required: false })
+  image: string;
+
   @Prop({ type: String, required: true })
   email: string;
 
@@ -21,7 +27,7 @@ export class Reviewer {
   @Prop({ type: String, required: false })
   linkedin: string;
 
-  @Prop({ type: String, enum: StatusEnum, required: false })
+  @Prop({ type: String, enum: StatusEnum, default: StatusEnum.pending, required: false })
   status: StatusEnum;
 
   @Prop({ type: Date, required: false, default: Date.now })

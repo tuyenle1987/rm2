@@ -10,6 +10,26 @@ import { UpdateCompanyDto } from '../dto/update-company.dto';
 export class CompanyService {
   constructor(@InjectModel('Company') private companyModel:Model<ICompany>) {}
 
+  async upsertBulk(
+    createCompanyDtos: CreateCompanyDto[],
+  ): Promise<any> {
+
+    let newData = createCompanyDtos.map((createCompanyDto: CreateCompanyDto) => {
+      return {
+        updateOne: {
+          filter: {
+            name: createCompanyDto.name
+          },
+          update: createCompanyDto,
+          upsert: true,
+        },
+      }
+    });
+
+    const data = await this.companyModel.bulkWrite(newData);
+    return data;
+  }
+
   async create(
     createCompanyDto: CreateCompanyDto,
   ): Promise<ICompany> {

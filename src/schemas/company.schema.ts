@@ -2,6 +2,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { StatusEnum } from '../enums/status.enum';
+import { Types } from 'mongoose';
 
 export type CompanyDocument = HydratedDocument<Company>;
 
@@ -9,6 +10,9 @@ export type CompanyDocument = HydratedDocument<Company>;
 export class Company {
   @Prop({ type: String, required: true })
   name: string;
+
+  @Prop({ type: String, required: false })
+  description: string;
 
   @Prop({ type: String, required: false })
   logo: string;
@@ -20,12 +24,21 @@ export class Company {
   website: string;
 
   @Prop({ type: String, required: false })
+  linkedin: string;
+
+  @Prop({ type: String, required: false })
+  facebook: string;
+
+  @Prop({ type: String, required: false })
+  twitter: string;
+
+  @Prop({ type: String, required: false })
   headquarter: string;
 
-  @Prop({ type: Number, required: false })
-  size: number;
+  @Prop({ type: String, required: false })
+  size: string;
 
-  @Prop({ type: String, enum: StatusEnum, required: false })
+  @Prop({ type: String, enum: StatusEnum, default: StatusEnum.pending, required: false })
   status: StatusEnum;
 
   @Prop({ type: Date, required: false, default: Date.now })

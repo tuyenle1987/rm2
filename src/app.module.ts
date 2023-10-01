@@ -21,8 +21,6 @@ import { ReviewerController } from './reviewer/reviewer.controller';
 import { ReviewerSchema } from './schemas/reviewer.schema';
 import { ReviewerService } from './reviewer/reviewer.service';
 
-console.log('MONGO_URL', process.env.MONGO_URL);
-
 @Module({
   imports: [
     ConfigModule.forRoot({
