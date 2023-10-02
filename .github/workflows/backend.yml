@@ -43,7 +43,5 @@ jobs:
 
     - name: Deploy to EKS
       run: |
-        kubectl delete -f deployment.yml
-        kubectl delete -f service.yml
         kubectl apply -f deployment.yml
         kubectl apply -f service.yml
