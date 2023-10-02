@@ -1,4 +1,4 @@
-- eksctl create cluster --region=us-west-1 --name=rm2
+- eksctl create cluster --region=us-west-1 --name=rm2 --instance-selector-vcpus=2 --instance-selector-memory
 - eksctl get cluster --region us-west-1
 - kubectl get pods --all-namespaces
 - aws eks update-kubeconfig --region us-west-1 --name rm2
