@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, Version } from '@nestjs/common';
+import { Body, Controller, Query, Delete, Get, HttpStatus, Param, Post, Put, Res, Version } from '@nestjs/common';
 import { CreateReviewerDto } from '../dto/create-reviewer.dto';
 import { UpdateReviewerDto } from '../dto/update-reviewer.dto';
 import { ReviewerService } from './reviewer.service';
@@ -78,9 +78,25 @@ export class ReviewerController {
     }
   }
 
+  @Get('/search')
+  @Version('1')
+  async search(
+    @Res() response,
+    @Query('name') name: string,
+  ) {
+    try {
+      const data = await this.service.search({ name });
+      return response.status(HttpStatus.OK).json({
+        data,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
   @Get('/:id')
   @Version('1')
-  async getReviewer(
+  async get(
     @Res() response,
     @Param('id') id: string,
   ) {

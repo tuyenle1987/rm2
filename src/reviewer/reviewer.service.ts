@@ -50,8 +50,19 @@ export class ReviewerService {
     return data;
   }
 
+  async search({ name }: { name: string }): Promise<IReviewer[]> {
+    const term = name.toLowerCase().split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)).join (' ');
+    const data = await this.reviewerModel.find({ name: { $regex: term, $options: 'i' }}).limit(20);
+    if (!data || data.length == 0) {
+        throw new NotFoundException('Reviewers data not found!');
+    }
+
+    return data;
+  }
+
   async getAll(): Promise<IReviewer[]> {
-    const data = await this.reviewerModel.find();
+    const data = await this.reviewerModel.find().limit(50);
     if (!data || data.length == 0) {
         throw new NotFoundException('Reviewers data not found!');
     }

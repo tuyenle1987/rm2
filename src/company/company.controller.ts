@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, Version } from '@nestjs/common';
+import { Body, Controller, Query, Delete, Get, HttpStatus, Param, Post, Put, Res, Version } from '@nestjs/common';
 import { CreateCompanyDto } from '../dto/create-company.dto';
 import { UpdateCompanyDto } from '../dto/update-company.dto';
 import { CompanyService } from './company.service';
@@ -74,6 +74,22 @@ export class CompanyController {
     try {
       const data = await this.service.getAll();
 
+      return response.status(HttpStatus.OK).json({
+        data,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Get('/search')
+  @Version('1')
+  async search(
+    @Res() response,
+    @Query('name') name: string,
+  ) {
+    try {
+      const data = await this.service.search({ name });
       return response.status(HttpStatus.OK).json({
         data,
       });

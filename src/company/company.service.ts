@@ -50,7 +50,18 @@ export class CompanyService {
   }
 
   async getAll(): Promise<ICompany[]> {
-    const data = await this.companyModel.find();
+    const data = await this.companyModel.find().limit(50);
+    if (!data || data.length == 0) {
+        throw new NotFoundException('Companies data not found!');
+    }
+
+    return data;
+  }
+
+   async search({ name }: { name: string }): Promise<ICompany[]> {
+    const term = name.toLowerCase().split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)).join (' ');
+    const data = await this.companyModel.find({ name: { $regex: term, $options: 'i' }}).limit(20);
     if (!data || data.length == 0) {
         throw new NotFoundException('Companies data not found!');
     }

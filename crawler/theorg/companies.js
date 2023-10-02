@@ -55,6 +55,7 @@ function process_reviewer_data(company) {
       image: position && position.profileImage ? position.profileImage.endpoint + '/' + position.profileImage.uri + '_thumb.' + position.profileImage.ext : null,
       company: company.name,
       title: position?.role,
+      description: position.description,
       linkedin: position?.social?.linkedInUrl,
       status: 'approved',
     };
