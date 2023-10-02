@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: rm2
-          image: 017334642290.dkr.ecr.us-west-1.amazonaws.com/rm2:1.1
+          image: 017334642290.dkr.ecr.us-west-1.amazonaws.com/rm2:1.2
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
