@@ -6,3 +6,9 @@
 - kubectl get pods --all-namespaces
 - kubectl exec -it rm2-57ccf668dd-fwxbm  -- /bin/bash
 - kubectl set env pod/rm2-57ccf668dd-fwxbm MONGO_URL=
+
+
+
+
+
+- pcx-0571f2084bdfe7c74	172.16.0.0/21 (us-west-1)
