@@ -27,7 +27,7 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallback: true, fallbackOnErrors: true });
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 8080);
 
   const server = app.getHttpServer();
   const router = server._events.request._router;
