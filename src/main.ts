@@ -44,6 +44,7 @@ async function bootstrap() {
       }
     })
     .filter(item => item !== undefined);
+  console.info(`Running on port: ${process.env.PORT}`);
   console.info(availableRoutes);
 }
 
