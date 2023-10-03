@@ -2,17 +2,17 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types, SchemaTypes, HydratedDocument } from 'mongoose';
 import { StatusEnum } from '../enums/status.enum';
 
-export type ReviewerDocument = HydratedDocument<Reviewer>;
+export type ReviewerDocument = HydratedDocument<Review>;
 
 @Schema()
-export class Reviewer {
-  @Prop({ type: Types.ObjectId , ref: 'Company' })
+export class Review {
+  @Prop({ type: Types.ObjectId , ref: 'Company', index: true })
   company:  Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId , ref: 'Reviewer' })
+  @Prop({ type: Types.ObjectId , ref: 'Reviewer', index: true })
   manager:  Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId , ref: 'Reviewer' })
+  @Prop({ type: Types.ObjectId , ref: 'Reviewer', index: true })
   reviewer:  Types.ObjectId;
 
   @Prop({ type: Number, required: false })
@@ -31,4 +31,4 @@ export class Reviewer {
   updatedOn: Date;
 }
 
-export const ReviewerSchema = SchemaFactory.createForClass(Reviewer);
+export const ReviewSchema = SchemaFactory.createForClass(Review);

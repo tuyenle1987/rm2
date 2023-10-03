@@ -6,7 +6,7 @@ export type ReviewerDocument = HydratedDocument<Reviewer>;
 
 @Schema()
 export class Reviewer {
- @Prop({ type: String, required: true })
+ @Prop({ type: String, required: true, index: true })
   name: string;
 
   @Prop({ type: String, required: false })
@@ -18,7 +18,7 @@ export class Reviewer {
   @Prop({ type: String, required: true })
   email: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, index: true })
   company: string;
 
   @Prop({ type: String, required: true })

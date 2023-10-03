@@ -5,6 +5,7 @@ import { Model } from "mongoose";
 import { IReviewer } from '../interface/reviewer.interface';
 import { CreateReviewerDto } from '../dto/create-reviewer.dto';
 import { UpdateReviewerDto } from '../dto/update-reviewer.dto';
+import { StatusEnum } from '../enums/status.enum';
 
 @Injectable()
 export class ReviewerService {
@@ -27,7 +28,7 @@ export class ReviewerService {
       }
     });
 
-    const data = await this.reviewerModel.bulkWrite(newData);
+    const data = await this.reviewerModel.bulkWrite(newData, { ordered: false });
     return data;
   }
 
@@ -55,14 +56,14 @@ export class ReviewerService {
       .map(word => word.charAt(0).toUpperCase() + word.slice(1)).join (' ');
     const data = await this.reviewerModel.find({ name: { $regex: term, $options: 'i' }}).limit(20);
     if (!data || data.length == 0) {
-        throw new NotFoundException('Reviewers data not found!');
+      throw new NotFoundException('Reviewers data not found!');
     }
 
     return data;
   }
 
   async getAll(): Promise<IReviewer[]> {
-    const data = await this.reviewerModel.find().limit(50);
+    const data = await this.reviewerModel.find({ status: StatusEnum.approved }).limit(50);
     if (!data || data.length == 0) {
         throw new NotFoundException('Reviewers data not found!');
     }

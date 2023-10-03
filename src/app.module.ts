@@ -1,6 +1,6 @@
 import { Module, MiddlewareConsumer, RequestMethod, Logger } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpLoggerMiddleware } from '@nest-toolbox/http-logger-middleware';
 import {
   CorrelationIdMiddleware,
@@ -20,6 +20,9 @@ import { CompanyService } from './company/company.service';
 import { ReviewerController } from './reviewer/reviewer.controller';
 import { ReviewerSchema } from './schemas/reviewer.schema';
 import { ReviewerService } from './reviewer/reviewer.service';
+import { ReviewController } from './review/review.controller';
+import { ReviewSchema } from './schemas/review.schema';
+import { ReviewService } from './review/review.service';
 
 @Module({
   imports: [
@@ -27,19 +30,34 @@ import { ReviewerService } from './reviewer/reviewer.service';
       isGlobal: true,
       load: [appConfig, dbConfig],
     }),
-    MongooseModule.forRoot(process.env.MONGO_URL),
+    MongooseModule.forRootAsync({
+      useFactory: async (config: ConfigService) => {
+        const mongoUrl = config.get<string>('mongoUrl');
+        return {
+          uri: mongoUrl,
+        };
+      },
+      inject: [ConfigService],
+    }),
     MongooseModule.forFeature([
       { name: 'Company', schema: CompanySchema },
-      { name: 'Reviewer', schema: ReviewerSchema }
+      { name: 'Reviewer', schema: ReviewerSchema },
+      { name: 'Review', schema: ReviewSchema },
     ]),
     HttpModule,
     CorrelationModule.forRoot(),
   ],
-  controllers: [AppController, CompanyController, ReviewerController],
+  controllers: [
+    AppController,
+    CompanyController,
+    ReviewerController,
+    ReviewController,
+  ],
   providers: [
     AppService,
     CompanyService,
     ReviewerService,
+    ReviewService,
     Logger,
   ],
 })

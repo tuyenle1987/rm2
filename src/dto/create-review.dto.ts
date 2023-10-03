@@ -6,14 +6,17 @@ import { Types } from 'mongoose';
 export class CreateReviewDto {
   @IsNotEmpty()
   @Type(() => Types.ObjectId)
+  @Transform( ({ value }) => new Types.ObjectId(value))
   company: Types.ObjectId;
 
   @IsNotEmpty()
   @Type(() => Types.ObjectId)
+  @Transform( ({ value }) => new Types.ObjectId(value))
   manager: Types.ObjectId;
 
   @IsNotEmpty()
   @Type(() => Types.ObjectId)
+  @Transform( ({ value }) => new Types.ObjectId(value))
   reviewer: Types.ObjectId;
 
   @IsNotEmpty()

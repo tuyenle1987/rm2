@@ -1,3 +1,3 @@
 export default () => ({
-  mongoUrl: parseInt(process.env.MONGO_URL),
+  mongoUrl: String(process.env.MONGO_URL),
 });

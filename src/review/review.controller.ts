@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, Version } from '@nestjs/common';
+import { Body, Query, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, Version } from '@nestjs/common';
 import { CreateReviewDto } from '../dto/create-review.dto';
 import { UpdateReviewDto } from '../dto/update-review.dto';
 import { ReviewService } from './review.service';
 
 @Controller('review')
 export class ReviewController {
-  constructor(private readonly reviewService: ReviewService) {}
+  constructor(private readonly service: ReviewService) {}
 
   @Post()
   @Version('1')
@@ -14,7 +14,7 @@ export class ReviewController {
     @Body() createDto: CreateReviewDto,
   ) {
     try {
-      const data = await this.reviewService.create(createDto);
+      const data = await this.service.create(createDto);
       return response.status(HttpStatus.CREATED).json({ data });
     } catch (err) {
       return response.status(HttpStatus.BAD_REQUEST).json({
@@ -33,7 +33,7 @@ export class ReviewController {
     @Body() updateDto: UpdateReviewDto,
   ) {
     try {
-      const data = await this.reviewService.update(id, updateDto);
+      const data = await this.service.update(id, updateDto);
 
       return response.status(HttpStatus.OK).json({
         data,
@@ -47,8 +47,25 @@ export class ReviewController {
   @Version('1')
   async getAll(@Res() response) {
     try {
-      const data = await this.reviewService.getAll();
+      const data = await this.service.getAll();
 
+      return response.status(HttpStatus.OK).json({
+        data,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Get('/search')
+  @Version('1')
+  async search(
+    @Res() response,
+    @Query('company') company: string,
+    @Query('manager') manager: string,
+  ) {
+    try {
+      const data = await this.service.search({ company, manager });
       return response.status(HttpStatus.OK).json({
         data,
       });
@@ -59,12 +76,12 @@ export class ReviewController {
 
   @Get('/:id')
   @Version('1')
-  async getReview(
+  async get(
     @Res() response,
     @Param('id') id: string,
   ) {
     try {
-      const data = await this.reviewService.get(id);
+      const data = await this.service.get(id);
 
       return response.status(HttpStatus.OK).json({
         data,
@@ -81,7 +98,7 @@ export class ReviewController {
     @Param('id') id: string,
   ) {
     try {
-      const data = await this.reviewService.delete(id);
+      const data = await this.service.delete(id);
 
       return response.status(HttpStatus.OK).json({
         data,

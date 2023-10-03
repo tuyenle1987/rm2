@@ -1,14 +1,13 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Types, HydratedDocument } from 'mongoose';
 import { StatusEnum } from '../enums/status.enum';
-import { Types } from 'mongoose';
 
 export type CompanyDocument = HydratedDocument<Company>;
 
 @Schema()
 export class Company {
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, index: true })
   name: string;
 
   @Prop({ type: String, required: false })

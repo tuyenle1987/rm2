@@ -1,5 +1,5 @@
 let limit = 400;
-let offset = 1200;
+let offset = 8000;
 
 async function post_company_data(companies) {
   await fetch(
@@ -48,14 +48,13 @@ function process_company_data(company) {
 function process_reviewer_data(company) {
   const reviewers = company.nodes.map(reviewer => {
     const position = reviewer?.node?.position;
-    console.log(position);
     return {
       name: position?.fullName,
       email: null,
       image: position && position.profileImage ? position.profileImage.endpoint + '/' + position.profileImage.uri + '_thumb.' + position.profileImage.ext : null,
       company: company.name,
       title: position?.role,
-      description: position.description,
+      description: position?.description,
       linkedin: position?.social?.linkedInUrl,
       status: 'approved',
     };
