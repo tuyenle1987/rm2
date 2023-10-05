@@ -1,11 +1,27 @@
-import { Body, Controller, Query, Delete, Get, HttpStatus, Param, Post, Put, Res, Version } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Query,
+  Get, Post, Put, Delete,
+  HttpStatus,
+  Param,
+  Res, Req,
+  Version,
+} from '@nestjs/common';
+import { CorrelationService } from '@evanion/nestjs-correlation-id';
+import { Logger } from '@nestjs/common';
 import { CreateCompanyDto } from '../dto/create-company.dto';
 import { UpdateCompanyDto } from '../dto/update-company.dto';
 import { CompanyService } from './company.service';
 
 @Controller('company')
 export class CompanyController {
-  constructor(private readonly service: CompanyService) {}
+  private readonly logger = new Logger(CompanyController.name);
+
+  constructor(
+    private readonly correlationService: CorrelationService,
+    private readonly service: CompanyService,
+  ) {}
 
   @Post('/bulk')
   @Version('1')
@@ -20,6 +36,7 @@ export class CompanyController {
         data,
       });
     } catch (err) {
+      this.logger.error(err);
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Company not created!',
@@ -31,17 +48,22 @@ export class CompanyController {
   @Post()
   @Version('1')
   async create(
+    @Req() req,
     @Res() response,
     @Body() createDto: CreateCompanyDto,
   ) {
+    const correlationId = await this.correlationService.getCorrelationId();
+
     try {
-      const data = await this.service.create(createDto);
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+
+      const data = await this.service.create(correlationId, createDto);
 
       return response.status(HttpStatus.CREATED).json({
         data,
       });
     } catch (err) {
-      console.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err }));
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Company not created!',
@@ -53,31 +75,43 @@ export class CompanyController {
   @Put('/:id')
   @Version('1')
   async update(
+    @Req() req,
     @Res() response,
     @Param('id') id: string,
     @Body() updateDto: UpdateCompanyDto,
   ) {
+    const correlationId = await this.correlationService.getCorrelationId();
+
     try {
-      const data = await this.service.update(id, updateDto);
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+      const data = await this.service.update(correlationId, id, updateDto);
 
       return response.status(HttpStatus.OK).json({
         data,
       });
     } catch (err) {
+      this.logger.error(JSON.stringify({ correlationId, err }));
       return response.status(err.status).json(err.response);
     }
   }
 
   @Get()
   @Version('1')
-  async getAll(@Res() response) {
+  async getAll(
+    @Req() req,
+    @Res() response,
+  ) {
+    const correlationId = await this.correlationService.getCorrelationId();
+
     try {
-      const data = await this.service.getAll();
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+      const data = await this.service.getAll(correlationId);
 
       return response.status(HttpStatus.OK).json({
         data,
       });
     } catch (err) {
+      this.logger.error(JSON.stringify({ correlationId, err }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -85,15 +119,20 @@ export class CompanyController {
   @Get('/search')
   @Version('1')
   async search(
+    @Req() req,
     @Res() response,
     @Query('name') name: string,
   ) {
+    const correlationId = await this.correlationService.getCorrelationId();
+
     try {
-      const data = await this.service.search({ name });
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+      const data = await this.service.search({ correlationId, name });
       return response.status(HttpStatus.OK).json({
         data,
       });
     } catch (err) {
+      this.logger.error(JSON.stringify({ correlationId, err }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -101,16 +140,21 @@ export class CompanyController {
   @Get('/:id')
   @Version('1')
   async get(
+    @Req() req,
     @Res() response,
     @Param('id') id: string,
   ) {
+    const correlationId = await this.correlationService.getCorrelationId();
+
     try {
-      const data = await this.service.get(id);
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+      const data = await this.service.get(correlationId, id);
 
       return response.status(HttpStatus.OK).json({
         data,
       });
     } catch (err) {
+      this.logger.error(JSON.stringify({ correlationId, err }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -127,7 +171,8 @@ export class CompanyController {
       return response.status(HttpStatus.OK).json({
         data,
       });
-    }catch (err) {
+    } catch (err) {
+      this.logger.error(err);
       return response.status(err.status).json(err.response);
     }
   }

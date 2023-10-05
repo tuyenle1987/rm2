@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from "mongoose";
+import { Logger } from '@nestjs/common';
 
 import { IReviewer } from '../interface/reviewer.interface';
 import { CreateReviewerDto } from '../dto/create-reviewer.dto';
@@ -9,6 +10,8 @@ import { StatusEnum } from '../enums/status.enum';
 
 @Injectable()
 export class ReviewerService {
+  private readonly logger = new Logger(ReviewerService.name);
+
   constructor(@InjectModel('Reviewer') private reviewerModel:Model<IReviewer>) {}
 
   async upsertBulk(
@@ -33,17 +36,23 @@ export class ReviewerService {
   }
 
   async create(
+    correlationId: string,
     createReviewerDto: CreateReviewerDto,
   ): Promise<IReviewer> {
-    const data = await new this.reviewerModel(createReviewerDto);
+    const data = await new this.reviewerModel(correlationId, createReviewerDto);
+    this.logger.log(JSON.stringify({ correlationId, data }));
+
     return data.save();
   }
 
   async update(
+    correlationId: string,
     id: string,
     updateReviewerDto: UpdateReviewerDto,
   ): Promise<IReviewer> {
     const data = await this.reviewerModel.findByIdAndUpdate(id, updateReviewerDto, { new: true });
+    this.logger.log(JSON.stringify({ correlationId, data }));
+
     if (!data) {
       throw new NotFoundException(`Reviewer #${id} not found`);
     }
@@ -51,11 +60,15 @@ export class ReviewerService {
     return data;
   }
 
-  async search({ name }: { name: string }): Promise<IReviewer[]> {
+  async search(
+    { correlationId, name }: { correlationId: string, name: string },
+  ): Promise<IReviewer[]> {
     const term = name.toLowerCase().split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1)).join (' ');
 
     const data = await this.reviewerModel.find({ name: { $regex: `^${term}`, $options: 'i' }}).limit(20);
+    this.logger.log(JSON.stringify({ correlationId, data: data.length }));
+
     if (!data || data.length == 0) {
       throw new NotFoundException('Reviewers data not found!');
     }
@@ -63,8 +76,10 @@ export class ReviewerService {
     return data;
   }
 
-  async getAll(): Promise<IReviewer[]> {
+  async getAll(correlationId: string): Promise<IReviewer[]> {
     const data = await this.reviewerModel.find({ status: StatusEnum.approved }).limit(50);
+    this.logger.log(JSON.stringify({ correlationId, data: data.length }));
+
     if (!data || data.length == 0) {
         throw new NotFoundException('Reviewers data not found!');
     }
@@ -72,8 +87,9 @@ export class ReviewerService {
     return data;
   }
 
-  async get(id: string): Promise<IReviewer> {
+  async get(correlationId:string, id: string): Promise<IReviewer> {
     const data = await this.reviewerModel.findById(id).exec();
+    this.logger.log(JSON.stringify({ correlationId, data }));
     if (!data) {
       throw new NotFoundException(`Reviewer #${id} not found`);
     }

@@ -1,9 +1,9 @@
 // https://vision.theorg.com/org/applied-intuition
 const countries = [ 'ca',  'fl',
 
-, 'nv', 'nh', 'nj', 'nm', 'ny', 'nc', 'nd', 'mp', 'oh', 'ok', 'or', 'pa', 'pr', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'vt', 'va', 'vi', 'wa', 'wv', 'wi', 'wy']
-const done = [ 'ne', 'mt', 'mo', 'ms', 'mn', 'mi', 'ma', 'md', 'me', 'la', 'ky', 'ks', 'ia','in', 'il','id', 'al', 'ak', 'as', 'az', 'ar', 'co', 'ct', 'de', 'dc', 'ga', 'gu', 'hi',];
-let currState = 'ne';
+, 'nd', 'mp', 'oh', 'ok', 'or', 'pa', 'pr', 'ri', 'sc', 'sd', 'tn', 'tx', 'ut', 'vt', 'va', 'vi', 'wa', 'wv', 'wi', 'wy']
+const done = [ 'nc', 'ny', 'nm', 'nj', 'nh', 'nv', 'ne', 'mt', 'mo', 'ms', 'mn', 'mi', 'ma', 'md', 'me', 'la', 'ky', 'ks', 'ia','in', 'il','id', 'al', 'ak', 'as', 'az', 'ar', 'co', 'ct', 'de', 'dc', 'ga', 'gu', 'hi',];
+let currState = 'nc';
 const bearer = 'Bearer 6e9f7220-a034-40ff-9f0a-11fea3e2d624';
 let limit = 50;
 let offset = 0;

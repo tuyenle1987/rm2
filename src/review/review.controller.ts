@@ -1,22 +1,44 @@
-import { Body, Query, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, Version } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Query,
+  Get, Post, Put, Delete,
+  HttpStatus,
+  Param,
+  Res, Req,
+  Version,
+} from '@nestjs/common';
+import { CorrelationService } from '@evanion/nestjs-correlation-id';
+import { Logger } from '@nestjs/common';
 import { CreateReviewDto } from '../dto/create-review.dto';
 import { UpdateReviewDto } from '../dto/update-review.dto';
 import { ReviewService } from './review.service';
 
 @Controller('review')
 export class ReviewController {
-  constructor(private readonly service: ReviewService) {}
+  private readonly logger = new Logger(ReviewController.name);
+
+  constructor(
+    private readonly correlationService: CorrelationService,
+    private readonly service: ReviewService,
+  ) {}
 
   @Post()
   @Version('1')
   async create(
+    @Req() req,
     @Res() response,
     @Body() createDto: CreateReviewDto,
   ) {
+    const correlationId = await this.correlationService.getCorrelationId();
+
     try {
-      const data = await this.service.create(createDto);
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+
+      const data = await this.service.create(correlationId, createDto);
       return response.status(HttpStatus.CREATED).json({ data });
     } catch (err) {
+      this.logger.error(err);
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Review not created!',
@@ -28,31 +50,43 @@ export class ReviewController {
   @Put('/:id')
   @Version('1')
   async update(
+    @Req() req,
     @Res() response,
     @Param('id') id: string,
     @Body() updateDto: UpdateReviewDto,
   ) {
-    try {
-      const data = await this.service.update(id, updateDto);
+    const correlationId = await this.correlationService.getCorrelationId();
 
+    try {
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+
+      const data = await this.service.update(correlationId, id, updateDto);
       return response.status(HttpStatus.OK).json({
         data,
       });
     } catch (err) {
+      this.logger.error(err);
       return response.status(err.status).json(err.response);
     }
   }
 
   @Get()
   @Version('1')
-  async getAll(@Res() response) {
-    try {
-      const data = await this.service.getAll();
+  async getAll(
+    @Req() req,
+    @Res() response,
+  ) {
+    const correlationId = await this.correlationService.getCorrelationId();
 
+    try {
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+
+      const data = await this.service.getAll(correlationId);
       return response.status(HttpStatus.OK).json({
         data,
       });
     } catch (err) {
+      this.logger.error(err);
       return response.status(err.status).json(err.response);
     }
   }
@@ -60,16 +94,22 @@ export class ReviewController {
   @Get('/search')
   @Version('1')
   async search(
+    @Req() req,
     @Res() response,
     @Query('company') company: string,
     @Query('manager') manager: string,
   ) {
+    const correlationId = await this.correlationService.getCorrelationId();
+
     try {
-      const data = await this.service.search({ company, manager });
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+
+      const data = await this.service.search({ correlationId, company, manager });
       return response.status(HttpStatus.OK).json({
         data,
       });
     } catch (err) {
+      this.logger.error(err);
       return response.status(err.status).json(err.response);
     }
   }
@@ -77,16 +117,22 @@ export class ReviewController {
   @Get('/:id')
   @Version('1')
   async get(
+    @Req() req,
     @Res() response,
     @Param('id') id: string,
   ) {
+    const correlationId = await this.correlationService.getCorrelationId();
+
     try {
-      const data = await this.service.get(id);
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+
+      const data = await this.service.get(correlationId, id);
 
       return response.status(HttpStatus.OK).json({
         data,
       });
     } catch (err) {
+      this.logger.error(err);
       return response.status(err.status).json(err.response);
     }
   }
@@ -104,6 +150,7 @@ export class ReviewController {
         data,
       });
     } catch (err) {
+      this.logger.error(err);
       return response.status(err.status).json(err.response);
     }
   }
