@@ -13,6 +13,10 @@ export class CreateReviewerDto {
 
   @IsString()
   @IsOptional()
+  theorgSlug: string;
+
+  @IsString()
+  @IsOptional()
   image: string;
 
   @IsOptional()

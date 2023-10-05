@@ -12,6 +12,14 @@ export class CreateCompanyDto {
   @IsOptional()
   description: string;
 
+  @IsString()
+  @IsOptional()
+  theorgSlug: string;
+
+  @IsString()
+  @IsOptional()
+  stage: string;
+
   @IsOptional()
   @IsString()
   logo: string;

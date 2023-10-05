@@ -8,6 +8,7 @@ export interface IReviewer extends Document {
   readonly email: string;
   readonly company: string;
   readonly title: string;
+  readonly theorgSlug: string;
   readonly linkedin: string;
   readonly createdOn: Date;
   readonly updatedOn: Date;

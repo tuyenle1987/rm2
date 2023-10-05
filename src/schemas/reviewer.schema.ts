@@ -9,11 +9,17 @@ export class Reviewer {
  @Prop({ type: String, required: true, index: true })
   name: string;
 
+  @Prop({ type: String, required: false, index: true })
+  theorgSlug: string;
+
   @Prop({ type: String, required: false })
   description: string;
 
   @Prop({ type: String, required: false })
   image: string;
+
+  @Prop({ type: String, required: false })
+  imageUrl: string;
 
   @Prop({ type: String, required: true })
   email: string;

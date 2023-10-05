@@ -1,5 +1,8 @@
-let limit = 400;
-let offset = 8000;
+let limit = 10;
+// let limit = 1;
+let offset = 9999;
+
+
 
 async function post_company_data(companies) {
   await fetch(
@@ -29,11 +32,16 @@ async function post_reviewers_data(reviewers) {
   );
 }
 
-function process_company_data(company) {
+async function process_company_data(company) {
+  const logoUrl = company.logoImage ? company.logoImage.endpoint + '/' + company.logoImage.uri + '_thumb.' + company.logoImage.ext : null;
+  let logo = logoUrl;
+
   return {
     name: company.name,
+    slug: company.slug,
     description: company.description,
-    logo: company.logoImage ? company.logoImage.endpoint + '/' + company.logoImage.uri + '_thumb.' + company.logoImage.ext : null,
+    logo,
+    stage: company.stage,
     industry: company.industries ? company.industries.map(industry => industry.title).join(',') : null,
     website: company.social?.websiteUrl,
     linkedin: company.social?.linkedInUrl,
@@ -45,24 +53,36 @@ function process_company_data(company) {
   };
 }
 
-function process_reviewer_data(company) {
-  const reviewers = company.nodes.map(reviewer => {
+async function process_reviewer_data(company) {
+  const reviewers = [];
+
+  for (i = 0; i < company.nodes.length; i++) {
+    const reviewer = company.nodes[i];
     const position = reviewer?.node?.position;
-    return {
+
+    const imageUrl = position && position.profileImage ? position.profileImage.endpoint + '/' + position.profileImage.uri + '_thumb.' + position.profileImage.ext : null;
+    let image = imageUrl;
+
+    reviewers.push({
       name: position?.fullName,
+      theorgSlug: position?.slug,
       email: null,
-      image: position && position.profileImage ? position.profileImage.endpoint + '/' + position.profileImage.uri + '_thumb.' + position.profileImage.ext : null,
+      image,
       company: company.name,
       title: position?.role,
       description: position?.description,
       linkedin: position?.social?.linkedInUrl,
       status: 'approved',
-    };
-  });
+    });
+  };
+
   return reviewers;
 }
 
 (async function () {
+
+try {
+
     const getData = () => JSON.stringify({
       query: `
 
@@ -305,7 +325,7 @@ fragment ExploreCompanyJobPost on JobPost {
 
 
   // 1800
-  for(let i = 0; i < 10; i++) {
+  for(let i = 0; i < 100; i++) {
     const response = await fetch(
         'https://prod-graphql-api.theorg.com/graphql',
         {
@@ -319,17 +339,36 @@ fragment ExploreCompanyJobPost on JobPost {
     );
 
     const json = await response.json();
+    const data = json.data?.exploreCompaniesV2?.results;
+    if (data.length === 0) {
+      throw 'no data';
+    }
 
-    const companies = json.data?.exploreCompaniesV2?.results.map(company => process_company_data(company));
+    const companies = [];
+
+    for (let i = 0; i < data.length; i++) {
+      const company = data[i];
+      const companyData = await process_company_data(company);
+      companies.push(companyData);
+    }
+    // console.log('companies', companies);
     await post_company_data(companies);
 
     let reviewers = [];
-    json.data?.exploreCompaniesV2?.results.forEach(company => {
-      reviewers = reviewers.concat(process_reviewer_data(company));
-    });
+    for (let j = 0; j < data.length; j++) {
+      const company = data[j];
+      const reviewersData = await process_reviewer_data(company);
+      reviewers = reviewers.concat(reviewersData);
+    }
+    // console.log('reviewers', reviewers);
     await post_reviewers_data(reviewers);
 
-    offset = offset + 400;
+    offset = offset + 10;
   }
+
+} catch(err) {
+  throw err;
+  alert(err);
+}
 
 })();
