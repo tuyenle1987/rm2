@@ -77,4 +77,10 @@ export class Reviewer {
   updatedOn: Date;
 }
 
-export const ReviewerSchema = SchemaFactory.createForClass(Reviewer);
+const ReviewerSchema = SchemaFactory.createForClass(Reviewer);
+
+ReviewerSchema.index({ name: 'text' });
+
+export {
+  ReviewerSchema,
+};

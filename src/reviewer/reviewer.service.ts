@@ -66,7 +66,21 @@ export class ReviewerService {
     const term = name.toLowerCase().split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1)).join (' ');
 
-    const data = await this.reviewerModel.find({ name: { $regex: `^${term}`, $options: 'i' }}).limit(20);
+    const data = await this.reviewerModel.aggregate([
+      {
+        $search: {
+          index: 'reviewerName',
+          autocomplete: {
+            query: term,
+            path: 'name',
+          }
+        }
+      },
+      {
+        $limit: 20,
+      },
+    ]);
+
     this.logger.log(JSON.stringify({ correlationId, data: data.length }));
 
     if (!data || data.length == 0) {
