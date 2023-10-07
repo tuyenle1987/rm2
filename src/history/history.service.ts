@@ -97,8 +97,8 @@ export class HistoryService {
         });
       }
 
-      data.workHistory = workHistory;
-      data.companyHistory = companyHistory;
+      data.workHistory = workHistory.length > 0 ? workHistory : null;
+      data.companyHistory = companyHistory.length > 0 ? companyHistory : null;
 
       const updateResult = await this.reviewerModel.findByIdAndUpdate(data._id, data, { new: false });
       this.logger.log(JSON.stringify({ correlationId, data: updateResult }));
