@@ -71,7 +71,7 @@ const countries = [
   'va', 'wa', 'wv', 'wi', 'wy',
 ];
 
-let currState = 'ut';
+let currState = 'vt';
 const bearer = 'Bearer 6e9f7220-a034-40ff-9f0a-11fea3e2d624';
 let limit = 50;
 let offset = 0;
