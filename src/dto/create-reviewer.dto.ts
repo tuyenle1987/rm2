@@ -17,6 +17,10 @@ export class CreateReviewerDto {
 
   @IsString()
   @IsOptional()
+  theorgId: string;
+
+  @IsString()
+  @IsOptional()
   image: string;
 
   @IsOptional()

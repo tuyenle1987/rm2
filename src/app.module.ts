@@ -1,6 +1,7 @@
 import { Module, MiddlewareConsumer, RequestMethod, Logger } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { HttpLoggerMiddleware } from '@nest-toolbox/http-logger-middleware';
 import {
   CorrelationIdMiddleware,
@@ -14,6 +15,8 @@ import dbConfig from './configs/db.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+import { AuthzModule } from './auth/authz.module';
+
 import { CompanyController } from './company/company.controller';
 import { CompanySchema } from './schemas/company.schema';
 import { CompanyService } from './company/company.service';
@@ -23,9 +26,29 @@ import { ReviewerService } from './reviewer/reviewer.service';
 import { ReviewController } from './review/review.controller';
 import { ReviewSchema } from './schemas/review.schema';
 import { ReviewService } from './review/review.service';
+import { HistoryController } from './history/history.controller';
+import { HistoryService } from './history/history.service';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot([
+      {
+        name: 'short',
+        ttl: 1000,
+        limit: 3,
+      },
+      {
+        name: 'medium',
+        ttl: 10000,
+        limit: 20
+      },
+      {
+        name: 'long',
+        ttl: 60000,
+        limit: 100
+      }
+    ]),
+    AuthzModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig, dbConfig],
@@ -52,12 +75,14 @@ import { ReviewService } from './review/review.service';
     CompanyController,
     ReviewerController,
     ReviewController,
+    HistoryController,
   ],
   providers: [
     AppService,
     CompanyService,
     ReviewerService,
     ReviewService,
+    HistoryService,
     Logger,
   ],
 })

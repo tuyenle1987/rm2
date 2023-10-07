@@ -38,7 +38,7 @@ export class ReviewController {
       const data = await this.service.create(correlationId, createDto);
       return response.status(HttpStatus.CREATED).json({ data });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Review not created!',
@@ -65,7 +65,7 @@ export class ReviewController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -86,7 +86,7 @@ export class ReviewController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -109,7 +109,7 @@ export class ReviewController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -132,7 +132,7 @@ export class ReviewController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -150,7 +150,7 @@ export class ReviewController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }

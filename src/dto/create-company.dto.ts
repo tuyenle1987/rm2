@@ -18,6 +18,10 @@ export class CreateCompanyDto {
 
   @IsString()
   @IsOptional()
+  theorgId: string;
+
+  @IsString()
+  @IsOptional()
   stage: string;
 
   @IsOptional()

@@ -7,9 +7,12 @@ import {
   Param,
   Res, Req,
   Version,
+  Logger,
+  UseGuards,
 } from '@nestjs/common';
 import { CorrelationService } from '@evanion/nestjs-correlation-id';
-import { Logger } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
 import { CreateCompanyDto } from '../dto/create-company.dto';
 import { UpdateCompanyDto } from '../dto/update-company.dto';
 import { CompanyService } from './company.service';
@@ -36,7 +39,7 @@ export class CompanyController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ err: err.stack }));
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Company not created!',
@@ -63,7 +66,7 @@ export class CompanyController {
         data,
       });
     } catch (err) {
-      this.logger.error(JSON.stringify({ correlationId, err }));
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Company not created!',
@@ -90,13 +93,14 @@ export class CompanyController {
         data,
       });
     } catch (err) {
-      this.logger.error(JSON.stringify({ correlationId, err }));
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
 
   @Get()
   @Version('1')
+  // @UseGuards(AuthGuard('jwt'))
   async getAll(
     @Req() req,
     @Res() response,
@@ -111,7 +115,7 @@ export class CompanyController {
         data,
       });
     } catch (err) {
-      this.logger.error(JSON.stringify({ correlationId, err }));
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -132,7 +136,7 @@ export class CompanyController {
         data,
       });
     } catch (err) {
-      this.logger.error(JSON.stringify({ correlationId, err }));
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -154,7 +158,7 @@ export class CompanyController {
         data,
       });
     } catch (err) {
-      this.logger.error(JSON.stringify({ correlationId, err }));
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -172,7 +176,7 @@ export class CompanyController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }

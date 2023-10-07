@@ -37,7 +37,7 @@ export class ReviewerController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ err: err.stack }));
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Reviewer not created!',
@@ -61,7 +61,7 @@ export class ReviewerController {
       const data = await this.service.create(correlationId, createDto);
       return response.status(HttpStatus.CREATED).json({ data });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(HttpStatus.BAD_REQUEST).json({
         statusCode: 400,
         message: 'Error: Reviewer not created!',
@@ -89,7 +89,7 @@ export class ReviewerController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -111,7 +111,7 @@ export class ReviewerController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -133,7 +133,7 @@ export class ReviewerController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -156,7 +156,7 @@ export class ReviewerController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }
@@ -174,7 +174,7 @@ export class ReviewerController {
         data,
       });
     } catch (err) {
-      this.logger.error(err);
+      this.logger.error(JSON.stringify({ err: err.stack }));
       return response.status(err.status).json(err.response);
     }
   }

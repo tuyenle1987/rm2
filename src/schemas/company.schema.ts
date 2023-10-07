@@ -14,6 +14,9 @@ export class Company {
   theorgSlug: string;
 
   @Prop({ type: String, required: false })
+  theorgId: string;
+
+  @Prop({ type: String, required: false })
   description: string;
 
   @Prop({ type: String, required: false })

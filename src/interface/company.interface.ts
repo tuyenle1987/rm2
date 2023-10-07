@@ -4,6 +4,7 @@ import { StatusEnum } from '../enums/status.enum';
 export interface ICompany extends Document {
   readonly name: string;
   readonly theorgSlug: string;
+  readonly theorgId: string;
   readonly logo: string;
   readonly description: string;
   readonly stage: string;

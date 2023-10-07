@@ -2,8 +2,6 @@ let limit = 10;
 // let limit = 1;
 let offset = 9999;
 
-
-
 async function post_company_data(companies) {
   await fetch(
     'http://localhost:3000/api/v1/company/bulk',
