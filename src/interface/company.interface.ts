@@ -17,5 +17,5 @@ export interface ICompany extends Document {
   readonly size: string;
   readonly createdOn: Date;
   readonly updatedOn: Date;
-  readonly status: StatusEnum;
+  status: StatusEnum;
 }

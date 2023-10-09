@@ -26,6 +26,8 @@ export class ReviewService {
   ): Promise<IReview> {
     const { company, manager, reviewer } = createReviewDto;
 
+    createReviewDto.status = StatusEnum.pending;
+
     // Validate Company
     const companyData = await this.companyModel.findById(company).exec();
     this.logger.log(JSON.stringify({ correlationId, data: companyData }));

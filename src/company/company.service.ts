@@ -40,6 +40,7 @@ export class CompanyService {
     createCompanyDto: CreateCompanyDto,
   ): Promise<ICompany> {
     const data = await new this.companyModel(createCompanyDto);
+    data.status = StatusEnum.pending;
     this.logger.log(JSON.stringify({ correlationId, data }));
 
     return data.save();
