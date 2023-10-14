@@ -21,10 +21,13 @@ import { CompanyController } from './company/company.controller';
 import { CompanySchema } from './schemas/company.schema';
 import { CompanyService } from './company/company.service';
 import { ReviewerController } from './reviewer/reviewer.controller';
+import { PendingController } from './pending/pending.controller';
+import { PendingService } from './pending/pending.service';
 import { ReviewerSchema } from './schemas/reviewer.schema';
 import { ReviewerService } from './reviewer/reviewer.service';
 import { ReviewController } from './review/review.controller';
 import { ReviewSchema } from './schemas/review.schema';
+import { PendingSchema } from './schemas/pending.schema';
 import { ReviewService } from './review/review.service';
 import { HistoryController } from './history/history.controller';
 import { HistoryService } from './history/history.service';
@@ -66,6 +69,7 @@ import { HistoryService } from './history/history.service';
       { name: 'Company', schema: CompanySchema },
       { name: 'Reviewer', schema: ReviewerSchema },
       { name: 'Review', schema: ReviewSchema },
+      { name: 'Pending', schema: PendingSchema },
     ]),
     HttpModule,
     CorrelationModule.forRoot(),
@@ -76,12 +80,14 @@ import { HistoryService } from './history/history.service';
     ReviewerController,
     ReviewController,
     HistoryController,
+    PendingController,
   ],
   providers: [
     AppService,
     CompanyService,
     ReviewerService,
     ReviewService,
+    PendingService,
     HistoryService,
     Logger,
   ],

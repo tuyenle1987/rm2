@@ -47,18 +47,21 @@ export class ReviewService {
     }
 
     // Validate Reviewer
-    const upsertData = await this.reviewerService.upsertBulk([{
-      name: user.name,
-      image: user.picture,
-      email: user.email,
-      description: null,
-      theorgSlug: null,
-      theorgId: null,
-      company: null,
-      title: null,
-      linkedin: null,
-    }]);
-    const reviewerData = await this.reviewerService.getByEmail(correlationId, user.email);
+    let reviewerData = await this.reviewerService.getByEmail(correlationId, user.email);
+    if (!reviewerData) {
+      const upsertData = await this.reviewerService.upsertBulk([{
+        name: user.name,
+        image: user.picture,
+        email: user.email,
+        description: null,
+        theorgSlug: null,
+        theorgId: null,
+        company: null,
+        title: null,
+        linkedin: null,
+      }]);
+      reviewerData = await this.reviewerService.getByEmail(correlationId, user.email);
+    }
     reviewer = reviewerData._id;
     this.logger.log(JSON.stringify({ correlationId, data: reviewerData }));
     if (!reviewerData) {

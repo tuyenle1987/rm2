@@ -28,6 +28,7 @@ export class CompanyController {
 
   @Post('/bulk')
   @Version('1')
+  @UseGuards(AuthGuard('noway'))
   async upsertBulk(
     @Res() response,
     @Body() createDtos: CreateCompanyDto[],
@@ -50,6 +51,7 @@ export class CompanyController {
 
   @Post()
   @Version('1')
+  @UseGuards(AuthGuard('noway'))
   async create(
     @Req() req,
     @Res() response,
