@@ -7,9 +7,11 @@ import {
   Param,
   Res, Req,
   Version,
+  UseGuards,
 } from '@nestjs/common';
 import { CorrelationService } from '@evanion/nestjs-correlation-id';
 import { Logger } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateReviewDto } from '../dto/create-review.dto';
 import { UpdateReviewDto } from '../dto/update-review.dto';
 import { ReviewService } from './review.service';
@@ -25,6 +27,7 @@ export class ReviewController {
 
   @Post()
   @Version('1')
+  @UseGuards(AuthGuard())
   async create(
     @Req() req,
     @Res() response,
@@ -33,9 +36,9 @@ export class ReviewController {
     const correlationId = await this.correlationService.getCorrelationId();
 
     try {
-      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl }));
+      this.logger.log(JSON.stringify({ correlationId, data: req.originalUrl, user: req.user }));
 
-      const data = await this.service.create(correlationId, createDto);
+      const data = await this.service.create(correlationId, createDto, req.user);
       return response.status(HttpStatus.CREATED).json({ data });
     } catch (err) {
       this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
@@ -49,6 +52,7 @@ export class ReviewController {
 
   @Put('/:id')
   @Version('1')
+  @UseGuards(AuthGuard('noway'))
   async update(
     @Req() req,
     @Res() response,
@@ -139,6 +143,7 @@ export class ReviewController {
 
   @Delete('/:id')
   @Version('1')
+  @UseGuards(AuthGuard('noway'))
   async delete(
     @Res() response,
     @Param('id') id: string,

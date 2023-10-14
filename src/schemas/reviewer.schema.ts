@@ -49,13 +49,13 @@ export class Reviewer {
   @Prop({ type: String, required: false })
   imageUrl: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, index: true, unique: true })
   email: string;
 
-  @Prop({ type: String, required: true, index: true })
+  @Prop({ type: String, required: false, index: true })
   company: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: false })
   title: string;
 
   @Prop({ type: String, required: false })
@@ -67,7 +67,7 @@ export class Reviewer {
   @Prop({ type: Array<ReviewerCompanyHistory>, required: false })
   companyHistory: ReviewerCompanyHistory[];
 
-  @Prop({ type: String, enum: StatusEnum, default: StatusEnum.pending, required: false })
+  @Prop({ type: String, enum: StatusEnum, default: StatusEnum.pending, required: false, index: true })
   status: StatusEnum;
 
   @Prop({ type: Date, required: false, default: Date.now })

@@ -14,7 +14,7 @@ export class CreateReviewDto {
   @Transform( ({ value }) => new Types.ObjectId(value))
   manager: Types.ObjectId;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => Types.ObjectId)
   @Transform( ({ value }) => new Types.ObjectId(value))
   reviewer: Types.ObjectId;

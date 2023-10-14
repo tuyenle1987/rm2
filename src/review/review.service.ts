@@ -9,12 +9,14 @@ import { UpdateReviewDto } from '../dto/update-review.dto';
 import { ICompany } from '../interface/company.interface';
 import { IReviewer } from '../interface/reviewer.interface';
 import { StatusEnum } from '../enums/status.enum';
+import { ReviewerService } from '../reviewer/reviewer.service';
 
 @Injectable()
 export class ReviewService {
   private readonly logger = new Logger(ReviewService.name);
 
   constructor(
+    private readonly reviewerService: ReviewerService,
     @InjectModel('Company') private companyModel:Model<ICompany>,
     @InjectModel('Reviewer') private reviewerModel:Model<IReviewer>,
     @InjectModel('Review') private reviewModel:Model<IReview>,
@@ -23,8 +25,10 @@ export class ReviewService {
   async create(
     correlationId: string,
     createReviewDto: CreateReviewDto,
+    user: any,
   ): Promise<IReview> {
-    const { company, manager, reviewer } = createReviewDto;
+    let reviewer = null;
+    const { company, manager } = createReviewDto;
 
     createReviewDto.status = StatusEnum.pending;
 
@@ -43,18 +47,36 @@ export class ReviewService {
     }
 
     // Validate Reviewer
-    const reviewerData = await this.reviewerModel.findById(reviewer).exec();
+    const upsertData = await this.reviewerService.upsertBulk([{
+      name: user.name,
+      image: user.picture,
+      email: user.email,
+      description: null,
+      theorgSlug: null,
+      theorgId: null,
+      company: null,
+      title: null,
+      linkedin: null,
+    }]);
+    const reviewerData = await this.reviewerService.getByEmail(correlationId, user.email);
+    reviewer = reviewerData._id;
     this.logger.log(JSON.stringify({ correlationId, data: reviewerData }));
     if (!reviewerData) {
       throw new NotFoundException(`Reviewer #${reviewer} not found`);
     }
 
     // Validate Review
-    // const reviewData = await this.reviewModel.find({ company, manager, reviewer }).exec();
-    // this.logger.log(JSON.stringify({ correlationId, data: reviewData }));
-    // if (reviewData && reviewData.length > 0) {
-    //   throw new Error(`Review already existed ${company} - ${manager} - ${reviewer}`);
-    // }
+    const reviewData = await this.reviewModel.find({
+      company,
+      manager,
+      reviewer,
+    }).exec();
+    this.logger.log(JSON.stringify({ correlationId, data: reviewData }));
+    if (reviewData && reviewData.length > 0) {
+      throw new Error(`Review already existed ${company} - ${manager} - ${reviewer}`);
+    }
+
+    createReviewDto.reviewer = reviewer;
 
     const data = await new this.reviewModel(createReviewDto);
     this.logger.log(JSON.stringify({ correlationId, data }));

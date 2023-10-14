@@ -77,6 +77,7 @@ export class CompanyController {
 
   @Put('/:id')
   @Version('1')
+  @UseGuards(AuthGuard('noway'))
   async update(
     @Req() req,
     @Res() response,
@@ -100,7 +101,6 @@ export class CompanyController {
 
   @Get()
   @Version('1')
-  // @UseGuards(AuthGuard('jwt'))
   async getAll(
     @Req() req,
     @Res() response,
@@ -164,6 +164,7 @@ export class CompanyController {
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard('noway'))
   @Version('1')
   async delete(
     @Res() response,

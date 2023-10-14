@@ -349,7 +349,6 @@ fragment ExploreCompanyJobPost on JobPost {
       const companyData = await process_company_data(company);
       companies.push(companyData);
     }
-    // console.log('companies', companies);
     await post_company_data(companies);
 
     let reviewers = [];
@@ -358,7 +357,6 @@ fragment ExploreCompanyJobPost on JobPost {
       const reviewersData = await process_reviewer_data(company);
       reviewers = reviewers.concat(reviewersData);
     }
-    // console.log('reviewers', reviewers);
     await post_reviewers_data(reviewers);
 
     offset = offset + 10;

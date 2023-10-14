@@ -7,9 +7,11 @@ import {
   Param,
   Res, Req,
   Version,
+  UseGuards,
 } from '@nestjs/common';
 import { CorrelationService } from '@evanion/nestjs-correlation-id';
 import { Logger } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
 import { CreateReviewerDto } from '../dto/create-reviewer.dto';
 import { UpdateReviewerDto } from '../dto/update-reviewer.dto';
@@ -26,6 +28,7 @@ export class ReviewerController {
 
   @Post('/bulk')
   @Version('1')
+  @UseGuards(AuthGuard('noway'))
   async upsertBulk(
     @Res() response,
     @Body() createDtos: CreateReviewerDto[],
@@ -48,6 +51,7 @@ export class ReviewerController {
 
   @Post()
   @Version('1')
+  @UseGuards(AuthGuard('noway'))
   async create(
     @Req() req,
     @Res() response,
@@ -72,6 +76,7 @@ export class ReviewerController {
 
   @Put('/:id')
   @Version('1')
+  @UseGuards(AuthGuard('noway'))
   async update(
     @Req() req,
     @Res() response,
@@ -163,6 +168,7 @@ export class ReviewerController {
 
   @Delete('/:id')
   @Version('1')
+  @UseGuards(AuthGuard('noway'))
   async delete(
     @Res() response,
     @Param('id') id: string,

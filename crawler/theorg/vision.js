@@ -529,7 +529,6 @@ try {
     await post_reviewers_data(reviewersData);
 
     offset = offset + 50;
-    console.log(offset, '===============');
   }
 } catch(err) {
   alert(offset);

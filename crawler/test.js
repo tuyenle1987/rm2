@@ -85,8 +85,6 @@ operationName: 'workHistory',
     );
 
     const json = await response.json();
-
-    console.log(JSON.stringify(json, null, 3));
 })()
 
 

@@ -48,10 +48,6 @@ const toDataURL = async (url) => {
       },
     });
   }
-  console.log(upsertData[0].updateOne.update);
 
   const result = await collection.bulkWrite(upsertData);
-  console.log(result);
-
-
 })();

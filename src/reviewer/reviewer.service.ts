@@ -24,6 +24,7 @@ export class ReviewerService {
           filter: {
             name: createReviewerDto.name,
             company: createReviewerDto.company,
+            email: createReviewerDto.email,
           },
           update: createReviewerDto,
           upsert: true,
@@ -109,6 +110,16 @@ export class ReviewerService {
     }
 
     return data;
+  }
+
+  async getByEmail(correlationId:string, email: string): Promise<IReviewer> {
+    const data = await this.reviewerModel.find({ email }).exec();
+    this.logger.log(JSON.stringify({ correlationId, data }));
+    if (!data) {
+      throw new NotFoundException(`Reviewer #${email} not found`);
+    }
+
+    return data[0];
   }
 
   async delete(id: string): Promise<IReviewer> {

@@ -5,7 +5,6 @@ import { Types } from 'mongoose';
 export interface IReview extends Document {
   readonly company: Types.ObjectId;
   readonly manager: Types.ObjectId;
-  readonly reviewer: Types.ObjectId;
   readonly description: string;
   readonly rating: number;
   readonly createdOn: Date;
