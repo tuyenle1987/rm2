@@ -116,6 +116,8 @@ export class ReviewService {
       throw new NotFoundException('Reviews data not found!');
     }
 
+    data.forEach((item) => item.reviewer = null);
+
     return data;
   }
 
