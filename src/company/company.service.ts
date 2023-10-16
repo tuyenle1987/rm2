@@ -77,11 +77,14 @@ export class CompanyService {
   ): Promise<ICompany[]> {
     const term = name.toLowerCase().split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1)).join (' ');
-    const data = await this.companyModel.find({ name: { $regex: term, $options: 'i' }, status: StatusEnum.approved }).limit(20);
+    const fuzzyMatch = await this.companyModel.find({ name: { $regex: term, $options: 'i' }, status: StatusEnum.approved }).limit(20);
+    const exactMatch = await this.companyModel.find({ name }).exec();
+    const data = exactMatch.concat(fuzzyMatch);
+
     this.logger.log(JSON.stringify({ correlationId, data }));
 
     if (!data || data.length == 0) {
-        throw new NotFoundException('Companies data not found!');
+      throw new NotFoundException('Companies data not found!');
     }
 
     return data;
