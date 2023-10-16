@@ -66,7 +66,7 @@ export class HistoryService {
       throw new NotFoundException(`History #${id} not found`);
     }
 
-    if (!data.workHistory && !data.companyHistory) {
+    if (!data.workHistory && !data.companyHistory && data.theorgId) {
       const workHistory = [];
       const companyHistory = [];
 
