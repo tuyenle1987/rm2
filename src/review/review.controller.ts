@@ -41,10 +41,14 @@ export class ReviewController {
       const data = await this.service.create(correlationId, createDto, req.user);
       return response.status(HttpStatus.CREATED).json({ data });
     } catch (err) {
+      let statusCode = 400;
+      if (err.message.includes('Review already existed')) {
+        statusCode = 409;
+      }
       this.logger.error(JSON.stringify({ correlationId, err: err.stack }));
       return response.status(HttpStatus.BAD_REQUEST).json({
-        statusCode: 400,
-        message: 'Error: Review not created!',
+        statusCode,
+        message: err.message,
         error: 'Bad Request'
       });
     }
