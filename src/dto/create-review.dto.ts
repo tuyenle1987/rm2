@@ -24,6 +24,10 @@ export class CreateReviewDto {
   description: string;
 
   @IsNotEmpty()
+  @IsString()
+  criterias: string;
+
+  @IsNotEmpty()
   @IsNumber()
   rating: number;
 

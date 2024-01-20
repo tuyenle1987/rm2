@@ -21,6 +21,9 @@ export class Review {
   @Prop({ type: String, required: false })
   description: string;
 
+  @Prop({ type: String, required: false })
+  criterias: string;
+
   @Prop({ type: String, enum: StatusEnum, default: StatusEnum.pending, required: false })
   status: StatusEnum;
 

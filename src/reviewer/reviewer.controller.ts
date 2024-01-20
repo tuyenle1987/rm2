@@ -28,7 +28,7 @@ export class ReviewerController {
 
   @Post('/bulk')
   @Version('1')
-  @UseGuards(AuthGuard('noway'))
+  // @UseGuards(AuthGuard('noway'))
   async upsertBulk(
     @Res() response,
     @Body() createDtos: CreateReviewerDto[],
