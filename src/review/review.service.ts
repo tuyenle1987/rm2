@@ -75,9 +75,9 @@ export class ReviewService {
       reviewer,
     }).exec();
     this.logger.log(JSON.stringify({ correlationId, data: reviewData }));
-    // if (reviewData && reviewData.length > 0) {
-    //   throw new Error(`Review already existed ${company} - ${manager} - ${reviewer}`);
-    // }
+    if (reviewData && reviewData.length > 0) {
+      throw new Error(`Review already existed ${company} - ${manager} - ${reviewer}`);
+    }
 
     createReviewDto.reviewer = reviewer;
 
